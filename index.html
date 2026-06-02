@@ -1826,7 +1826,7 @@ document.getElementById('confirmBtn').addEventListener('click', async () => {
     currentAppt = { date: selectedDate, time: selectedTime, key, timeKey };
 
     // ── שליחת אימייל ללקוח ──────────────────────────────────────
-    emailjs.send('service_d6zxonw', 'template_b6zkqql', {
+    emailjs.send('service_d6zxonw', 'template_b6zkqqi', {
       customer_name: `${userFirstName} ${userLastName}`,
       email:         userEmail,
       phone:         userPhone,
