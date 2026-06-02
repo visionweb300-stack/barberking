@@ -2204,16 +2204,8 @@ function launchIntroFireworks() {
 // זיקוקי כניסה הוסרו
 
 
-const bookingCanvas = document.getElementById('booking-canvas');
-const bookCtx = bookingCanvas.getContext('2d');
-
-function resizeBookingCanvas() {
-  const sec = document.getElementById('booking');
-  bookingCanvas.width  = sec.offsetWidth;
-  bookingCanvas.height = sec.offsetHeight;
-}
-resizeBookingCanvas();
-window.addEventListener('resize', resizeBookingCanvas);
+function resizeBookingCanvas() {   if (!bookingCanvas) return;   const sec = document.getElementById('booking');   bookingCanvas.width  = sec.offsetWidth || window.innerWidth;   bookingCanvas.height = sec.offsetHeight || 800; }
+const bookCtx = bookingCanvas ? bookingCanvas.getContext('2d') : null;;
 
 // ── GOLDEN GLITTER SPARKLES ──────────────────────────────────────────────
 const GLITTER_COLORS = ['#FFD700','#C9A84C','#F5D78E','#FFF8DC','#E8C97A','#FFEC8B','#DAA520','#fffacd','#ffd966','#fff0a0'];
