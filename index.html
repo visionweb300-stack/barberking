@@ -6,6 +6,8 @@
 <title>BarberKing – מספרה בוטיק</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('IVEkwPSSt3EOPO-d-');</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1446,6 +1448,10 @@
         <label class="form-label">מספר טלפון</label>
         <input type="tel" id="inp-phone" class="form-input" placeholder="050-000-0000" autocomplete="tel" dir="ltr">
       </div>
+      <div class="form-group">
+        <label class="form-label">אימייל</label>
+        <input type="email" id="inp-email" class="form-input" placeholder="example@gmail.com" autocomplete="email" dir="ltr">
+      </div>
       <p id="form-error" style="color:#e74c3c;font-size:0.82rem;min-height:1.1em;margin-top:0.5rem;text-align:center;"></p>
       <button class="btn-primary" id="toStep1">המשך לבחירת תאריך →</button>
     </div>
@@ -1601,6 +1607,7 @@ let currentAppt  = null;
 let userFirstName = '';
 let userLastName  = '';
 let userPhone     = '';
+let userEmail     = '';
 
 // ─── LISTEN TO FIREBASE IN REAL TIME ─────────────────────────────────────────
 onValue(ref(db, 'booked'), (snapshot) => {
@@ -1651,16 +1658,19 @@ document.getElementById('toStep1').addEventListener('click', () => {
   const fn = document.getElementById('inp-firstname').value.trim();
   const ln = document.getElementById('inp-lastname').value.trim();
   const ph = document.getElementById('inp-phone').value.trim();
+  const em = document.getElementById('inp-email').value.trim();
   const err = document.getElementById('form-error');
 
   if (!fn) { err.textContent = 'נא להזין שם פרטי'; return; }
   if (!ln) { err.textContent = 'נא להזין שם משפחה'; return; }
   if (!ph || ph.length < 9) { err.textContent = 'נא להזין מספר טלפון תקין'; return; }
+  if (!em || !em.includes('@')) { err.textContent = 'נא להזין כתובת אימייל תקינה'; return; }
 
   err.textContent = '';
   userFirstName = fn;
   userLastName  = ln;
   userPhone     = ph;
+  userEmail     = em;
   goToStep(1);
 });
 
@@ -1815,6 +1825,18 @@ document.getElementById('confirmBtn').addEventListener('click', async () => {
 
     currentAppt = { date: selectedDate, time: selectedTime, key, timeKey };
 
+    // ── שליחת אימייל ללקוח ──────────────────────────────────────
+    emailjs.send('service_d6zxonw', 'w8cfscl', {
+      customer_name: `${userFirstName} ${userLastName}`,
+      email:         userEmail,
+      phone:         userPhone,
+      date:          formatDateHebrew(selectedDate),
+      time:          selectedTime,
+      // אימייל לבעל העסק
+      owner_email:   'visionweb300@gmail.com',
+      owner_message: `תור חדש!\nשם: ${userFirstName} ${userLastName}\nטלפון: ${userPhone}\nאימייל: ${userEmail}\nתאריך: ${formatDateHebrew(selectedDate)}\nשעה: ${selectedTime}`
+    }).catch(() => {}); // לא לעצור אם אימייל נכשל
+
     [0,1,2,3].forEach(i => {
       const p = document.getElementById(`panel${i}`);
       if (p) p.classList.remove('active');
@@ -1846,6 +1868,7 @@ document.getElementById('cancelBtn').addEventListener('click', async () => {
   document.getElementById('inp-firstname').value = '';
   document.getElementById('inp-lastname').value  = '';
   document.getElementById('inp-phone').value     = '';
+  document.getElementById('inp-email').value     = '';
 
   document.getElementById('success-panel').classList.remove('active');
   document.getElementById('step-tabs').style.display = 'flex';
