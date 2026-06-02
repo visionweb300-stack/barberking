@@ -1835,8 +1835,7 @@ document.getElementById('confirmBtn').addEventListener('click', async () => {
       // אימייל לבעל העסק
       owner_email:   'visionweb300@gmail.com',
       owner_message: `תור חדש!\nשם: ${userFirstName} ${userLastName}\nטלפון: ${userPhone}\nאימייל: ${userEmail}\nתאריך: ${formatDateHebrew(selectedDate)}\nשעה: ${selectedTime}`
-    }).catch(() => {}); // לא לעצור אם אימייל נכשל
-
+ }).catch((err) => { console.error('EmailJS Error:', err); });
     [0,1,2,3].forEach(i => {
       const p = document.getElementById(`panel${i}`);
       if (p) p.classList.remove('active');
