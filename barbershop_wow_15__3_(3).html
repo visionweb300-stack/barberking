@@ -1,0 +1,2335 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BarberKing – מספרה בוטיק</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Heebo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --dark: #0A0A0A;
+    --dark2: #111111;
+    --dark3: #1A1A1A;
+    --cream: #F5F0E8;
+    --text-muted: #888;
+    --radius: 4px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--dark);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+
+
+  /* HERO */
+  #hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ── CINEMATIC HERO SLIDESHOW ── */
+  #hero-slides {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    transform: scale(1.05);
+    animation: kenBurns 8s ease-in-out infinite alternate;
+  }
+  .hero-slide.active { opacity: 1; }
+  @keyframes kenBurns {
+    0%   { transform: scale(1.0) translateX(0); }
+    100% { transform: scale(1.08) translateX(-1%); }
+  }
+  .hero-slide:nth-child(2) { animation-delay: -2s; }
+  .hero-slide:nth-child(3) { animation-delay: -4s; }
+  .hero-slide:nth-child(4) { animation-delay: -6s; }
+
+  .hero-film-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    pointer-events: none;
+    animation: grainMove 0.5s steps(2) infinite;
+  }
+  @keyframes grainMove {
+    0%   { transform: translateX(0) translateY(0); }
+    25%  { transform: translateX(2px) translateY(-2px); }
+    50%  { transform: translateX(-2px) translateY(2px); }
+    75%  { transform: translateX(2px) translateY(2px); }
+    100% { transform: translateX(-2px) translateY(-2px); }
+  }
+
+  .hero-gradient-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      linear-gradient(to bottom,
+        rgba(0,0,0,0.2) 0%,
+        rgba(0,0,0,0.45) 40%,
+        rgba(0,0,0,0.85) 80%,
+        rgba(0,0,0,0.97) 100%),
+      linear-gradient(135deg, rgba(201,168,76,0.07) 0%, transparent 50%);
+  }
+
+  /* slide dots */
+  #slide-dots {
+    position: absolute;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+  }
+  .slide-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transition: all 0.4s;
+    cursor: pointer;
+  }
+  .slide-dot.active {
+    width: 24px;
+    border-radius: 3px;
+    background: var(--gold);
+  }
+
+  /* ── SERVICES SECTION ── */
+  #services {
+    background: #080808;
+    padding: 6rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  #services::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 3rem auto 0;
+  }
+  .service-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(201,168,76,0.4);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.08);
+    background: rgba(255,255,255,0.04);
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+    filter: grayscale(0.3);
+  }
+  .service-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+  .service-price {
+    color: var(--gold);
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .service-desc {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  /* ── STATS COUNTER ── */
+  #stats {
+    background: linear-gradient(135deg, #0d0d0d 0%, #111 100%);
+    padding: 4rem 1.5rem;
+    position: relative;
+  }
+  #stats::before, #stats::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+  }
+  #stats::before { top: 0; }
+  #stats::after  { bottom: 0; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .stat-item { padding: 1rem; }
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #C9A84C, #F5D78E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+  .stat-label {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+  }
+
+  /* ── GALLERY STRIP ── */
+  #gallery-strip {
+    overflow: hidden;
+    background: #050505;
+    padding: 0;
+    height: 260px;
+    position: relative;
+  }
+  .gallery-track {
+    display: flex;
+    gap: 4px;
+    height: 100%;
+    animation: galleryScroll 30s linear infinite;
+    width: max-content;
+  }
+  @keyframes galleryScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .gallery-track:hover { animation-play-state: paused; }
+  .gallery-item {
+    width: 220px;
+    height: 100%;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(30%) contrast(1.1);
+    transition: filter 0.4s, transform 0.6s;
+  }
+  .gallery-item:hover img {
+    filter: grayscale(0%) contrast(1.2);
+    transform: scale(1.05);
+  }
+  .gallery-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%);
+  }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials {
+    background: #0a0a0a;
+    padding: 5rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .testimonials-track {
+    display: flex;
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 3rem auto 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 1rem;
+  }
+  .testimonials-track::-webkit-scrollbar { display: none; }
+  .testimonial-card {
+    flex: 0 0 280px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    text-align: right;
+    transition: all 0.3s;
+  }
+  .testimonial-card:hover {
+    border-color: rgba(201,168,76,0.35);
+    transform: translateY(-4px);
+  }
+  .testimonial-stars { color: var(--gold); font-size: 1rem; margin-bottom: 1rem; }
+  .testimonial-text { color: rgba(255,255,255,0.75); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1.2rem; }
+  .testimonial-author { color: var(--gold); font-weight: 600; font-size: 0.85rem; }
+
+  /* ── HERO BADGE ── */
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 40px;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: badgePulse 1.5s ease-in-out infinite;
+  }
+  @keyframes badgePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.6); }
+  }
+
+  #hero-content {
+    position: relative;
+    z-index: 100000;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Heebo', sans-serif;
+    font-weight: 300;
+    font-size: 0.85rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: #fff;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.55s forwards;
+    text-shadow: 0 4px 40px rgba(0,0,0,0.5);
+  }
+
+  .hero-title span {
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    margin-top: 1.2rem;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.75s forwards;
+  }
+
+  .btn-book {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2.8rem;
+    padding: 1rem 2.8rem;
+    background: var(--gold);
+    color: var(--dark);
+    font-family: 'Heebo', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--radius);
+    transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.95s forwards;
+    text-decoration: none;
+  }
+
+  .btn-book:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(201,168,76,0.4);
+  }
+
+  .btn-book:active { transform: translateY(0); }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.5s forwards;
+  }
+
+  .scroll-indicator span {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* BOOKING SECTION */
+  #booking {
+    background: var(--dark2);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* gold particle canvas behind booking section */
+  #booking-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* overlay removed — pure black + particles */
+  #booking-overlay { display: none; }
+
+  /* content above the gallery */
+  #booking-inner {
+    position: relative;
+    z-index: 2;
+    padding: 5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .section-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+    .booking-card {
+    background: rgba(20,20,20,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 640px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+  }
+
+  .card-tab {
+    display: flex;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .step-indicator {
+    flex: 1;
+    padding: 1.2rem 1rem;
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  .step-indicator.active {
+    color: var(--gold);
+  }
+
+  .step-indicator.done {
+    color: rgba(201,168,76,0.5);
+  }
+
+  .step-indicator.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--gold);
+  }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    font-size: 0.7rem;
+    margin-left: 6px;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+
+  .step-indicator.done .step-num {
+    background: rgba(201,168,76,0.2);
+  }
+
+  /* STEP PANELS */
+  .step-panel { display: none; padding: 2rem 2rem 2.5rem; }
+  .step-panel.active { display: block; }
+
+  /* DATE PICKER */
+  .calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .cal-nav {
+    background: none;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .cal-nav:hover { background: rgba(201,168,76,0.1); }
+
+  .cal-month-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .cal-day-name {
+    text-align: center;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0.5rem 0;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    border: 1px solid transparent;
+    color: var(--cream);
+    position: relative;
+  }
+
+  .cal-day:hover:not(.disabled):not(.empty) {
+    background: rgba(201,168,76,0.12);
+    border-color: rgba(201,168,76,0.3);
+  }
+
+  .cal-day.selected {
+    background: var(--gold);
+    color: var(--dark);
+    font-weight: 600;
+  }
+
+  .cal-day.today:not(.selected) {
+    border-color: rgba(201,168,76,0.5);
+    color: var(--gold);
+  }
+
+  .cal-day.disabled {
+    color: rgba(255,255,255,0.15);
+    cursor: not-allowed;
+  }
+
+  .cal-day.empty { cursor: default; }
+
+  /* TIME SLOTS */
+  .slots-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .slot {
+    padding: 0.65rem 0.4rem;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--cream);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .slot:hover:not(.booked) {
+    background: rgba(201,168,76,0.12);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .slot.selected {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  .slot.booked {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.2);
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background: var(--gold);
+    color: var(--dark);
+    font-family: 'Heebo', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.35);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* CONFIRMATION */
+  .confirm-box {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .confirm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.95rem;
+  }
+
+  .confirm-row:last-child { border-bottom: none; }
+  .confirm-label { color: var(--text-muted); font-weight: 300; }
+  .confirm-value { color: #fff; font-weight: 600; }
+
+  /* SUCCESS */
+  #success-panel {
+    display: none;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  #success-panel.active { display: block; }
+
+  .success-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 1.8rem;
+    color: var(--gold);
+    animation: scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  .success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.6rem;
+  }
+
+  .success-sub {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.8rem;
+    line-height: 1.7;
+  }
+
+  .appointment-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.35);
+    border-radius: 40px;
+    padding: 0.55rem 1.3rem;
+    color: var(--gold);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+  }
+
+  .btn-cancel {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.85rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-cancel:hover {
+    border-color: rgba(220,60,60,0.5);
+    color: rgba(220,60,60,0.8);
+    background: rgba(220,60,60,0.06);
+  }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.8rem 0;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.07);
+  }
+  .divider span {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* FOOTER */
+  footer {
+    background: #050505;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 4rem 2rem 2rem;
+    direction: rtl;
+    position: relative;
+    overflow: hidden;
+  }
+  #footer-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  footer .footer-inner,
+  footer .footer-bottom {
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  @media (max-width: 600px) {
+    .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+  }
+
+  .footer-brand .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    margin-bottom: 0.7rem;
+  }
+
+  .footer-brand p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 260px;
+  }
+
+  .footer-nav-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .footer-nav a {
+    display: block;
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    margin-bottom: 0.7rem;
+    transition: color 0.2s;
+  }
+  .footer-nav a:hover { color: var(--gold); }
+
+  .footer-contact-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .footer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 0.8rem;
+    direction: rtl;
+  }
+
+  .footer-contact-item span.icon {
+    font-size: 1rem;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .footer-bottom {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-top: 1.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-copy {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-book-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.7rem 1.8rem;
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.5);
+    color: var(--gold);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.25s, border-color 0.25s, transform 0.2s;
+  }
+  .footer-book-btn:hover {
+    background: rgba(201,168,76,0.12);
+    border-color: var(--gold);
+    transform: translateY(-1px);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50%       { opacity: 1;   transform: scaleY(1.15); }
+  }
+
+  @keyframes scaleIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .slot-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    text-align: left;
+  }
+
+  .selected-date-display {
+    font-size: 0.9rem;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 1.2rem;
+    min-height: 1.2em;
+    text-align: center;
+  }
+
+  /* back link */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    font-family: 'Heebo', sans-serif;
+  }
+  .back-link:hover { color: var(--gold); }
+
+  /* FORM INPUTS */
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .form-input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: var(--radius);
+    padding: 0.85rem 1rem;
+    color: #fff;
+    font-family: 'Heebo', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .form-input::placeholder { color: rgba(255,255,255,0.2); }
+  .form-input:focus {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SPECTACULAR UPGRADE - זיקוקים, חלקיקים, אפקטים
+  ═══════════════════════════════════════════════════ */
+
+  /* Custom cursor */
+  * { cursor: none !important; }
+  @media (pointer: fine) {
+  #custom-cursor {
+    position: fixed;
+    font-size: 28px;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    transition: transform 0.1s ease;
+    line-height: 1;
+    user-select: none;
+    filter: drop-shadow(0 0 8px rgba(201,168,76,0.7));
+  }
+  #cursor-ring {
+    position: fixed;
+    width: 44px; height: 44px;
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+  }
+  * { cursor: none !important; }
+  }
+  @media (pointer: coarse) {
+    #custom-cursor, #cursor-ring { display: none !important; }
+  }
+
+  /* Particle canvas */
+  #particle-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Hero upgrade */
+  #hero {
+    overflow: hidden;
+  }
+
+  #hero-bg {
+    animation: heroZoom 20s ease-in-out infinite alternate;
+  }
+  @keyframes heroZoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.08); }
+  }
+
+  /* Gold shimmer on title */
+  .hero-title span {
+    background: linear-gradient(90deg, #C9A84C, #F5D78E, #C9A84C, #E8C97A, #C9A84C);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: goldShimmer 4s linear infinite;
+  }
+  @keyframes goldShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 300% center; }
+  }
+
+  /* Glowing border on hero button */
+  .btn-book {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(201,168,76,0.3);
+  }
+  .btn-book::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -60%;
+    width: 40%; height: 200%;
+    background: rgba(255,255,255,0.25);
+    transform: skewX(-20deg);
+    animation: btnShine 3s ease-in-out infinite;
+  }
+  @keyframes btnShine {
+    0% { left: -60%; }
+    30%, 100% { left: 160%; }
+  }
+
+  /* Floating scissors decoration */
+  .scissors-float {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.08;
+    animation: floatAround 15s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes floatAround {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.06; }
+    25% { transform: translateY(-30px) rotate(15deg); opacity: 0.12; }
+    50% { transform: translateY(-15px) rotate(-10deg); opacity: 0.08; }
+    75% { transform: translateY(-40px) rotate(20deg); opacity: 0.1; }
+  }
+
+  /* Booking card glow */
+  .booking-card {
+    box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 60px rgba(201,168,76,0.08);
+    transition: box-shadow 0.5s ease;
+  }
+  .booking-card:hover {
+    box-shadow: 0 24px 100px rgba(0,0,0,0.8), 0 0 80px rgba(201,168,76,0.15);
+  }
+
+  /* Step tabs glow when active */
+  .step-tab.active .step-num {
+    box-shadow: 0 0 20px rgba(201,168,76,0.6);
+    animation: tabPulse 2s ease-in-out infinite;
+  }
+  @keyframes tabPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(201,168,76,0.4); }
+    50% { box-shadow: 0 0 25px rgba(201,168,76,0.8); }
+  }
+
+  /* Slot hover effect */
+  .slot:not(.booked):hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(201,168,76,0.4);
+    background: rgba(201,168,76,0.15);
+    border-color: var(--gold);
+  }
+  .slot {
+    transition: all 0.2s ease;
+  }
+
+  /* Success panel fireworks overlay */
+  #fireworks-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    display: none;
+  }
+
+  /* Hero eyebrow sparkle */
+  .hero-eyebrow::before,
+  .hero-eyebrow::after {
+    content: '✦';
+    color: var(--gold);
+    margin: 0 0.5rem;
+    animation: sparkle 2s ease-in-out infinite;
+  }
+  .hero-eyebrow::after { animation-delay: 1s; }
+  @keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.7); }
+  }
+
+  /* Luxury divider */
+  .luxury-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.5rem auto 1.5rem;
+    max-width: 300px;
+  }
+  .luxury-divider::before, .luxury-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .luxury-divider span { color: var(--gold); font-size: 0.7rem; letter-spacing: 0.3em; }
+
+  /* Scroll progress bar */
+  #scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), #F5D78E, var(--gold));
+    z-index: 9999;
+    width: 0%;
+    transition: width 0.1s;
+  }
+
+  /* Number counter animation */
+  @keyframes countUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Booking button pulse */
+  .btn-primary {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s, height 0.5s, opacity 0.5s;
+    opacity: 0;
+  }
+  .btn-primary:active::after {
+    width: 300px; height: 300px; opacity: 0;
+  }
+
+  /* Ambient light effect on hero */
+  #hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 300px;
+    background: radial-gradient(ellipse at center bottom, rgba(201,168,76,0.12) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Noise texture overlay */
+  #hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  /* Cut thumb selected ring */
+  .cut-thumb.selected {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 20px rgba(201,168,76,0.5);
+  }
+  .cut-thumb.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 8px; right: 8px;
+    background: var(--gold);
+    color: #000;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+
+
+<!-- Scroll progress -->
+<div id="scroll-progress"></div>
+
+<!-- Custom cursor - מספריים -->
+<div id="custom-cursor">✂️</div>
+<div id="cursor-ring"></div>
+
+<!-- Particle canvas -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- Fireworks canvas -->
+<canvas id="fireworks-canvas"></canvas>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="scissors-float" style="top:15%;left:8%;animation-delay:0s;">✂</div>
+  <div class="scissors-float" style="top:60%;right:6%;animation-delay:3s;font-size:1.5rem;">✂</div>
+  <div class="scissors-float" style="top:30%;right:12%;animation-delay:6s;font-size:1rem;">✦</div>
+  <div class="scissors-float" style="top:75%;left:15%;animation-delay:9s;font-size:1rem;">✦</div>
+
+  <!-- Cinematic slideshow -->
+  <div id="hero-slides">
+    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1920&q=85')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1920&q=85')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=1920&q=85')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=1920&q=85')"></div>
+  </div>
+  <div class="hero-film-grain"></div>
+  <div class="hero-gradient-overlay"></div>
+
+  <div id="hero-content">
+    <div class="hero-badge"><span class="hero-badge-dot"></span>מספרה בוטיק עילית · תל אביב</div>
+    <h1 class="hero-title">Barber<span>King</span></h1>
+    <p class="hero-sub">אמנות הגילוח · סטייל שלא מתפשר</p>
+    <a href="#booking" class="btn-book" id="openBooking">✂ לחצו כאן לקביעת תור</a>
+  </div>
+
+  <!-- Slide dots -->
+  <div id="slide-dots">
+    <div class="slide-dot active" onclick="goSlide(0)"></div>
+    <div class="slide-dot" onclick="goSlide(1)"></div>
+    <div class="slide-dot" onclick="goSlide(2)"></div>
+    <div class="slide-dot" onclick="goSlide(3)"></div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>גלול</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- GALLERY STRIP -->
+<div id="gallery-strip">
+  <div class="gallery-track">
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80" alt=""></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&q=80" alt=""></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400&q=80" alt=""></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&q=80" alt=""></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80" alt=""></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&q=80" alt=""></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400&q=80" alt=""></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&q=80" alt=""></div>
+    <!-- duplicate for infinite loop -->
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80" alt=""></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&q=80" alt=""></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400&q=80" alt=""></div>
+    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&q=80" alt=""></div>
+  </div>
+</div>
+
+
+<!-- BOOKING -->
+<section id="booking" style="display:none;">
+
+  </div>
+  <div id="booking-overlay"></div>
+
+  <div id="booking-inner">
+    <div class="section-header">
+      <p class="section-eyebrow">✦ שירות אונליין ✦</p>
+      <h2 class="section-title">קבע את ה<em>תור שלך</em></h2>
+    </div>
+
+
+    <div class="booking-card">
+    <!-- STEP TABS -->
+    <div class="card-tab" id="step-tabs">
+      <div class="step-indicator active" id="tab0">
+        <span class="step-num">1</span> פרטים
+      </div>
+      <div class="step-indicator" id="tab1">
+        <span class="step-num">2</span> תאריך
+      </div>
+      <div class="step-indicator" id="tab2">
+        <span class="step-num">3</span> שעה
+      </div>
+      <div class="step-indicator" id="tab3">
+        <span class="step-num">4</span> אישור
+      </div>
+    </div>
+
+    <!-- STEP 0: PERSONAL DETAILS -->
+    <div class="step-panel active" id="panel0">
+      <p class="slots-label" style="margin-bottom:1.5rem;">פרטים אישיים</p>
+      <div class="form-group">
+        <label class="form-label">שם פרטי</label>
+        <input type="text" id="inp-firstname" class="form-input" placeholder="למשל: יונתן" autocomplete="given-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">שם משפחה</label>
+        <input type="text" id="inp-lastname" class="form-input" placeholder="למשל: כהן" autocomplete="family-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">מספר טלפון</label>
+        <input type="tel" id="inp-phone" class="form-input" placeholder="050-000-0000" autocomplete="tel" dir="ltr">
+      </div>
+      <p id="form-error" style="color:#e74c3c;font-size:0.82rem;min-height:1.1em;margin-top:0.5rem;text-align:center;"></p>
+      <button class="btn-primary" id="toStep1">המשך לבחירת תאריך →</button>
+    </div>
+
+    <!-- STEP 1: DATE -->
+    <div class="step-panel" id="panel1">
+      <div class="calendar-header">
+        <button class="cal-nav" id="prevMonth">&#8250;</button>
+        <span class="cal-month-label" id="monthLabel"></span>
+        <button class="cal-nav" id="nextMonth">&#8249;</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <button class="btn-primary" id="toStep2" disabled>המשך לבחירת שעה →</button>
+    </div>
+
+    <!-- STEP 2: TIME -->
+    <div class="step-panel" id="panel2">
+      <button class="back-link" onclick="goToStep(1)">← חזרה</button>
+      <p class="selected-date-display" id="selectedDateLabel"></p>
+      <p class="slots-label">בחר שעה</p>
+      <div class="slots-grid" id="slotsGrid"></div>
+      <p class="slot-count" id="slotCount"></p>
+      <button class="btn-primary" id="toStep3" disabled>המשך לאישור →</button>
+    </div>
+
+    <!-- STEP 3: CONFIRM -->
+    <div class="step-panel" id="panel3">
+      <button class="back-link" onclick="goToStep(2)">← חזרה</button>
+      <p class="slots-label" style="margin-bottom:1.5rem;">סיכום התור שלך</p>
+      <div class="confirm-box">
+        <div class="confirm-row">
+          <span class="confirm-label">שם</span>
+          <span class="confirm-value" id="conf-name"></span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">טלפון</span>
+          <span class="confirm-value" id="conf-phone"></span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">תאריך</span>
+          <span class="confirm-value" id="conf-date"></span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">שעה</span>
+          <span class="confirm-value" id="conf-time"></span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">משך הטיפול</span>
+          <span class="confirm-value">20 דקות</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">מיקום</span>
+          <span class="confirm-value">BarberKing</span>
+        </div>
+      </div>
+      <button class="btn-primary" id="confirmBtn">אשר וקבע תור</button>
+    </div>
+
+    <!-- SUCCESS -->
+    <div id="success-panel">
+      <div class="success-icon">✓</div>
+      <h3 class="success-title">התור נקבע בהצלחה!</h3>
+      <p class="success-sub">מחכים לך ב־BarberKing<br>נזכרת? ביטול ניתן עד שעה לפני התור.</p>
+      <div class="appointment-chip" id="success-chip">✦ — —</div>
+      <div class="divider"><span>פעולות</span></div>
+      <button class="btn-cancel" id="cancelBtn">ביטול התור</button>
+    </div>
+  </div><!-- /booking-card -->
+  </div><!-- /booking-inner -->
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <canvas id="footer-canvas"></canvas>
+  <div class="footer-inner">
+
+    <!-- Brand -->
+    <div class="footer-brand">
+      <div class="footer-logo">BarberKing ✦</div>
+      <p>מספרה פרימיום לגברים עם גישה מקצועית, יחס אישי ואהבה אמיתית לאומנות הספרות.</p>
+    </div>
+
+    <!-- ניווט מהיר -->
+    <div>
+      <p class="footer-nav-title">ניווט מהיר</p>
+      <div class="footer-nav">
+        <a href="#hero">ראשי</a>
+        <a href="#booking">קביעת תור</a>
+      </div>
+
+      <p class="footer-contact-title" style="margin-top:1.8rem;">יצירת קשר</p>
+      <div class="footer-contact-item">
+        <span class="icon">📞</span>
+        <span>050-000-0000</span>
+      </div>
+      <div class="footer-contact-item">
+        <span class="icon">✉️</span>
+        <span>info@thecrown.co.il</span>
+      </div>
+      <div class="footer-contact-item">
+        <span class="icon">📍</span>
+        <span>רחוב הדוגמה 1, תל אביב</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <span class="footer-copy">© BarberKing 2025. כל הזכויות שמורות.</span>
+    <a href="#booking" class="footer-book-btn">✂ קבע תור עכשיו</a>
+  </div>
+</footer>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ─── FIREBASE CONFIG ──────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyBYNb3THe2d7nMf-wf1JjrBET3f99mkZ98",
+  authDomain: "barberking-68ce4.firebaseapp.com",
+  databaseURL: "https://barberking-68ce4-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "barberking-68ce4",
+  storageBucket: "barberking-68ce4.firebasestorage.app",
+  messagingSenderId: "633136770279",
+  appId: "1:633136770279:web:03a0d9dc4d6f1a5f498642",
+  measurementId: "G-SPK892QSD3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+// ─── GALLERY LOADED ───────────────────────────────────────────────────────────
+function checkGalleryLoaded() {
+  // booking bg is now canvas particles
+}
+setTimeout(checkGalleryLoaded, 2000);
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+const START_HOUR = 10;
+const END_HOUR   = 20;
+const SLOT_MIN   = 20;
+
+const HEBREW_MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const HEBREW_DAYS   = ['א','ב','ג','ד','ה','ו','ש'];
+
+let bookedSlots = {};
+let viewYear, viewMonth;
+let selectedDate = null;
+let selectedTime = null;
+let currentAppt  = null;
+let userFirstName = '';
+let userLastName  = '';
+let userPhone     = '';
+
+// ─── LISTEN TO FIREBASE IN REAL TIME ─────────────────────────────────────────
+onValue(ref(db, 'booked'), (snapshot) => {
+  bookedSlots = snapshot.val() || {};
+  if (selectedDate && document.getElementById('panel2').classList.contains('active')) {
+    renderSlots();
+  }
+});
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function toKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function formatDateHebrew(d) {
+  const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  return `יום ${days[d.getDay()]}‏, ${d.getDate()} ב${HEBREW_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function addMinutes(t, m) {
+  const [h, min] = t.split(':').map(Number);
+  const total = h * 60 + min + m;
+  return `${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;
+}
+
+function isSlotPast(dateObj, timeStr) {
+  const now = new Date();
+  const [h, m] = timeStr.split(':').map(Number);
+  const slotDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), h, m, 0);
+  return slotDate <= now;
+}
+
+// ─── SLOTS GENERATOR ─────────────────────────────────────────────────────────
+function generateSlots() {
+  const slots = [];
+  let h = START_HOUR, m = 0;
+  while (h < END_HOUR) {
+    slots.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+    m += SLOT_MIN;
+    if (m >= 60) { m -= 60; h++; }
+  }
+  return slots;
+}
+const ALL_SLOTS = generateSlots();
+
+// ─── STEP 0: PERSONAL DETAILS ────────────────────────────────────────────────
+document.getElementById('toStep1').addEventListener('click', () => {
+  const fn = document.getElementById('inp-firstname').value.trim();
+  const ln = document.getElementById('inp-lastname').value.trim();
+  const ph = document.getElementById('inp-phone').value.trim();
+  const err = document.getElementById('form-error');
+
+  if (!fn) { err.textContent = 'נא להזין שם פרטי'; return; }
+  if (!ln) { err.textContent = 'נא להזין שם משפחה'; return; }
+  if (!ph || ph.length < 9) { err.textContent = 'נא להזין מספר טלפון תקין'; return; }
+
+  err.textContent = '';
+  userFirstName = fn;
+  userLastName  = ln;
+  userPhone     = ph;
+  goToStep(1);
+});
+
+// ─── CALENDAR ─────────────────────────────────────────────────────────────────
+function initCalendar() {
+  const now = new Date();
+  viewYear  = now.getFullYear();
+  viewMonth = now.getMonth();
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('monthLabel').textContent = `${HEBREW_MONTHS[viewMonth]} ${viewYear}`;
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  HEBREW_DAYS.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-day-name';
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    grid.appendChild(el);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(viewYear, viewMonth, d);
+    const el = document.createElement('div');
+    el.className = 'cal-day';
+    el.textContent = d;
+
+    if (date < today) {
+      el.classList.add('disabled');
+    } else {
+      if (date.toDateString() === today.toDateString()) el.classList.add('today');
+      if (selectedDate && date.toDateString() === selectedDate.toDateString()) el.classList.add('selected');
+      el.addEventListener('click', () => {
+        selectedDate = date;
+        selectedTime = null;
+        document.getElementById('toStep2').disabled = false;
+        renderCalendar();
+      });
+    }
+    grid.appendChild(el);
+  }
+}
+
+document.getElementById('prevMonth').addEventListener('click', () => {
+  viewMonth--;
+  if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+  renderCalendar();
+});
+
+document.getElementById('nextMonth').addEventListener('click', () => {
+  viewMonth++;
+  if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+  renderCalendar();
+});
+
+// ─── SLOTS PANEL ──────────────────────────────────────────────────────────────
+function renderSlots() {
+  const key = toKey(selectedDate);
+  const takenObj = (bookedSlots && bookedSlots[key]) ? bookedSlots[key] : {};
+  const grid = document.getElementById('slotsGrid');
+  grid.innerHTML = '';
+  selectedTime = null;
+  document.getElementById('toStep3').disabled = true;
+  document.getElementById('selectedDateLabel').textContent = formatDateHebrew(selectedDate);
+
+  let freeCount = 0;
+  ALL_SLOTS.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'slot';
+    el.textContent = t;
+
+    const isPast   = isSlotPast(selectedDate, t);
+    const isBooked = takenObj[t.replace(':', '_')] !== undefined;
+
+    if (isPast || isBooked) {
+      el.classList.add('booked');
+      el.title = isPast ? 'שעה זו כבר עברה' : 'שעה זו כבר תפוסה';
+    } else {
+      freeCount++;
+      el.addEventListener('click', () => {
+        document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedTime = t;
+        document.getElementById('toStep3').disabled = false;
+      });
+    }
+    grid.appendChild(el);
+  });
+
+  document.getElementById('slotCount').textContent =
+    freeCount > 0 ? `${freeCount} שעות פנויות` : 'אין שעות פנויות ביום זה';
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+function goToStep(n) {
+  [0,1,2,3].forEach(i => {
+    const p = document.getElementById(`panel${i}`);
+    if (p) p.classList.toggle('active', i === n);
+    const t = document.getElementById(`tab${i}`);
+    if (t) t.classList.remove('active','done');
+  });
+  document.getElementById('success-panel').classList.remove('active');
+  document.getElementById('step-tabs').style.display = 'flex';
+  for (let i = 0; i < n; i++) {
+    const t = document.getElementById(`tab${i}`);
+    if (t) t.classList.add('done');
+  }
+  const activeTab = document.getElementById(`tab${n}`);
+  if (activeTab) activeTab.classList.add('active');
+
+  if (n === 2) renderSlots();
+  if (n === 3) {
+    document.getElementById('conf-name').textContent  = `${userFirstName} ${userLastName}`;
+    document.getElementById('conf-phone').textContent = userPhone;
+    document.getElementById('conf-date').textContent  = formatDateHebrew(selectedDate);
+    document.getElementById('conf-time').textContent  = `${selectedTime} – ${addMinutes(selectedTime, 20)}`;
+  }
+}
+
+document.getElementById('toStep2').addEventListener('click', () => goToStep(2));
+document.getElementById('toStep3').addEventListener('click', () => goToStep(3));
+window.goToStep = goToStep;
+
+// ─── CONFIRM – שמור ב-Firebase ────────────────────────────────────────────────
+document.getElementById('confirmBtn').addEventListener('click', async () => {
+  const key     = toKey(selectedDate);
+  const timeKey = selectedTime.replace(':', '_');
+  const btn     = document.getElementById('confirmBtn');
+
+  btn.disabled = true;
+  btn.textContent = 'שומר...';
+
+  try {
+    await set(ref(db, `booked/${key}/${timeKey}`), {
+      name:  `${userFirstName} ${userLastName}`,
+      phone: userPhone,
+      time:  selectedTime,
+      date:  key
+    });
+
+    currentAppt = { date: selectedDate, time: selectedTime, key, timeKey };
+
+    [0,1,2,3].forEach(i => {
+      const p = document.getElementById(`panel${i}`);
+      if (p) p.classList.remove('active');
+    });
+    document.getElementById('step-tabs').style.display = 'none';
+    document.getElementById('success-panel').classList.add('active');
+    document.getElementById('success-chip').textContent =
+      `✦ ${userFirstName} ${userLastName} · ${formatDateHebrew(selectedDate)} · ${selectedTime}`;
+  } catch(e) {
+    alert('שגיאה בשמירת התור. נסה שוב.');
+    btn.disabled = false;
+    btn.textContent = 'אשר וקבע תור';
+  }
+});
+
+// ─── CANCEL – מחק מ-Firebase ──────────────────────────────────────────────────
+document.getElementById('cancelBtn').addEventListener('click', async () => {
+  if (!currentAppt) return;
+  const { key, timeKey } = currentAppt;
+  try { await remove(ref(db, `booked/${key}/${timeKey}`)); } catch(e) {}
+
+  currentAppt  = null;
+  selectedDate = null;
+  selectedTime = null;
+  userFirstName = '';
+  userLastName  = '';
+  userPhone     = '';
+
+  document.getElementById('inp-firstname').value = '';
+  document.getElementById('inp-lastname').value  = '';
+  document.getElementById('inp-phone').value     = '';
+
+  document.getElementById('success-panel').classList.remove('active');
+  document.getElementById('step-tabs').style.display = 'flex';
+  goToStep(0);
+  initCalendar();
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+initCalendar();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SPECTACULAR EFFECTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Custom cursor - מכונת תספורת (מחשב בלבד)
+if (window.matchMedia('(pointer: fine)').matches) {
+const cursor = document.getElementById('custom-cursor');
+const ring   = document.getElementById('cursor-ring');
+let cx = 0, cy = 0, rx = 0, ry = 0;
+let lastX = 0, lastY = 0;
+document.addEventListener('mousemove', e => {
+  const dx = e.clientX - lastX;
+  const dy = e.clientY - lastY;
+  const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+  lastX = e.clientX; lastY = e.clientY;
+  cx = e.clientX; cy = e.clientY;
+  cursor.style.left = cx + 'px';
+  cursor.style.top  = cy + 'px';
+  cursor.style.transform = `translate(-50%, -50%) rotate(${angle + 45}deg)`;
+});
+(function animRing() {
+  rx += (cx - rx) * 0.12;
+  ry += (cy - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a, button, .slot, .cut-thumb').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '44px'; cursor.style.height = '44px';
+    ring.style.width = '60px'; ring.style.height = '60px';
+    ring.style.borderColor = 'rgba(201,168,76,0.8)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '32px'; cursor.style.height = '32px';
+    ring.style.width = '44px'; ring.style.height = '44px';
+    ring.style.borderColor = 'rgba(201,168,76,0.4)';
+  });
+});
+} // end desktop cursor
+
+// Scroll progress bar
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('scroll-progress').style.width = pct + '%';
+});
+
+// ── GOLD PARTICLE SYSTEM ──────────────────────────────────────────────────
+const pCanvas = document.getElementById('particle-canvas');
+const pCtx    = pCanvas.getContext('2d');
+pCanvas.width  = window.innerWidth;
+pCanvas.height = window.innerHeight;
+window.addEventListener('resize', () => {
+  pCanvas.width  = window.innerWidth;
+  pCanvas.height = window.innerHeight;
+});
+
+const particles = [];
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * pCanvas.width;
+    this.y = Math.random() * pCanvas.height;
+    this.size = Math.random() * 2 + 0.5;
+    this.speedY = -(Math.random() * 0.4 + 0.1);
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.opacity = Math.random() * 0.5 + 0.1;
+    this.color = Math.random() > 0.5 ? '#C9A84C' : '#F5D78E';
+  }
+  update() {
+    this.y += this.speedY;
+    this.x += this.speedX;
+    this.opacity -= 0.001;
+    if (this.opacity <= 0 || this.y < 0) this.reset();
+  }
+  draw() {
+    pCtx.save();
+    pCtx.globalAlpha = this.opacity;
+    pCtx.fillStyle = this.color;
+    pCtx.beginPath();
+    pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    pCtx.fill();
+    pCtx.restore();
+  }
+}
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+function animParticles() {
+  pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+
+// Mouse trail particles
+document.addEventListener('mousemove', e => {
+  if (Math.random() > 0.6) {
+    const t = new Particle();
+    t.x = e.clientX; t.y = e.clientY;
+    t.size = Math.random() * 3 + 1;
+    t.opacity = 0.8;
+    t.speedY = -(Math.random() * 1 + 0.5);
+    t.speedX = (Math.random() - 0.5) * 1;
+    particles.push(t);
+    if (particles.length > 200) particles.splice(0, 1);
+  }
+});
+
+// ── SPARKLE TRAIL ─────────────────────────────────────────────────────────
+function createSparkle(x, y) {
+  const sparkle = document.createElement('div');
+  const size = Math.random() * 14 + 6;
+  const shapes = ['✦', '✧', '★', '·', '✵', '✺'];
+  sparkle.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+  sparkle.style.cssText = `
+    position:fixed;
+    left:${x}px;
+    top:${y}px;
+    font-size:${size}px;
+    color:${Math.random() > 0.5 ? '#C9A84C' : '#F5D78E'};
+    pointer-events:none;
+    z-index:99990;
+    transform:translate(-50%,-50%);
+    animation:sparkleFade 0.7s ease forwards;
+    text-shadow:0 0 8px rgba(201,168,76,0.9);
+  `;
+  document.body.appendChild(sparkle);
+  setTimeout(() => sparkle.remove(), 700);
+}
+
+// Add sparkle keyframe
+const sparkleStyle = document.createElement('style');
+sparkleStyle.textContent = `
+  @keyframes sparkleFade {
+    0%   { opacity:1; transform:translate(-50%,-50%) scale(1) rotate(0deg); }
+    100% { opacity:0; transform:translate(-50%,-${Math.floor(Math.random()*30+20)}px) scale(0) rotate(${Math.random()>0.5?180:-180}deg); }
+  }
+`;
+document.head.appendChild(sparkleStyle);
+
+let sparkleThrottle = 0;
+document.addEventListener('mousemove', e => {
+  sparkleThrottle++;
+  if (sparkleThrottle % 3 === 0) {
+    createSparkle(e.clientX, e.clientY);
+  }
+});
+
+// ── FIREWORKS ON SUCCESS ──────────────────────────────────────────────────
+const fCanvas = document.getElementById('fireworks-canvas');
+const fCtx    = fCanvas.getContext('2d');
+fCanvas.width  = window.innerWidth;
+fCanvas.height = window.innerHeight;
+
+class Firework {
+  constructor() {
+    this.x = Math.random() * fCanvas.width;
+    this.y = Math.random() * fCanvas.height * 0.6;
+    this.particles = [];
+    const colors = ['#C9A84C','#F5D78E','#FFD700','#FFF8DC','#E8C97A','#ffffff'];
+    const count = 60 + Math.floor(Math.random() * 40);
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 / count) * i + Math.random() * 0.3;
+      const speed = Math.random() * 6 + 2;
+      this.particles.push({
+        x: this.x, y: this.y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        alpha: 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        size: Math.random() * 3 + 1
+      });
+    }
+  }
+  update() {
+    this.particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.1;
+      p.vx *= 0.98;
+      p.alpha -= 0.018;
+    });
+    this.particles = this.particles.filter(p => p.alpha > 0);
+  }
+  draw() {
+    this.particles.forEach(p => {
+      fCtx.save();
+      fCtx.globalAlpha = p.alpha;
+      fCtx.fillStyle = p.color;
+      fCtx.shadowBlur = 6;
+      fCtx.shadowColor = p.color;
+      fCtx.beginPath();
+      fCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      fCtx.fill();
+      fCtx.restore();
+    });
+  }
+  done() { return this.particles.length === 0; }
+}
+
+let fireworks = [];
+let fwActive = false;
+function launchFireworks() {
+  fCanvas.style.display = 'block';
+  fwActive = true;
+  fireworks = [];
+  let launched = 0;
+  function launch() {
+    if (launched < 12) {
+      fireworks.push(new Firework());
+      fireworks.push(new Firework());
+      launched++;
+      setTimeout(launch, 300);
+    }
+  }
+  launch();
+  function animFW() {
+    fCtx.fillStyle = 'rgba(0,0,0,0.15)';
+    fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+    fireworks.forEach(f => { f.update(); f.draw(); });
+    fireworks = fireworks.filter(f => !f.done());
+    if (fireworks.length > 0 || launched < 12) {
+      requestAnimationFrame(animFW);
+    } else {
+      fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
+      fCanvas.style.display = 'none';
+      fwActive = false;
+    }
+  }
+  animFW();
+}
+
+// Hook into success panel – זיקוקים רק אחרי אישור תור
+document.getElementById('confirmBtn').addEventListener('click', () => {
+  setTimeout(() => {
+    if (document.getElementById('success-panel').classList.contains('active')) {
+      launchFireworks();
+    }
+  }, 500);
+});
+
+// ── פתיחת booking בלחיצה ────────────────────────────────────────────────
+document.getElementById('openBooking').addEventListener('click', function(e) {
+  e.preventDefault();
+  const booking = document.getElementById('booking');
+  booking.style.display = 'block';
+  booking.style.opacity = '0';
+  booking.style.transform = 'translateY(40px)';
+  booking.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+  setTimeout(() => {
+    booking.style.opacity = '1';
+    booking.style.transform = 'translateY(0)';
+    booking.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+});
+const slides = document.querySelectorAll('.hero-slide');
+const dots   = document.querySelectorAll('.slide-dot');
+let currentSlide = 0;
+function goSlide(n) {
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  currentSlide = n;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+}
+window.goSlide = goSlide;
+setInterval(() => goSlide((currentSlide + 1) % slides.length), 5000);
+
+// ── COUNTER ANIMATION ─────────────────────────────────────────────────────
+function animateCounter(el, target, suffix = '') {
+  let start = 0;
+  const duration = 2000;
+  const step = target / (duration / 16);
+  function tick() {
+    start = Math.min(start + step, target);
+    el.textContent = Math.floor(start).toLocaleString() + suffix;
+    if (start < target) requestAnimationFrame(tick);
+  }
+  tick();
+}
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.stat-number').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        const suffix = el.dataset.target === '98' ? '%' : '+';
+        animateCounter(el, target, suffix);
+      });
+      statsObserver.disconnect();
+    }
+  });
+}, { threshold: 0.5 });
+const statsSection = document.getElementById('stats');
+if (statsSection) statsObserver.observe(statsSection);
+// ── זיקוקי כניסה (ברקע, בלי מסך שחור) ───────────────────────────────────
+function launchIntroFireworks() {
+  fCanvas.style.display = 'block';
+  fireworks = [];
+  let launched = 0;
+  const total = 12;
+
+  function launchOne() {
+    if (launched >= total) return;
+    fireworks.push(new Firework());
+    launched++;
+    setTimeout(launchOne, 300);
+  }
+  launchOne();
+
+  function animIntro() {
+    // נקה לגמרי — שקוף לחלוטין, האתר נראה מאחורה
+    fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
+    fireworks.forEach(f => { f.update(); f.draw(); });
+    fireworks = fireworks.filter(f => !f.done());
+    if (launched < total || fireworks.length > 0) {
+      requestAnimationFrame(animIntro);
+    } else {
+      fCanvas.style.display = 'none';
+    }
+  }
+  animIntro();
+}
+
+// זיקוקי כניסה הוסרו
+
+
+const bookingCanvas = document.getElementById('booking-canvas');
+const bookCtx = bookingCanvas.getContext('2d');
+
+function resizeBookingCanvas() {
+  const sec = document.getElementById('booking');
+  bookingCanvas.width  = sec.offsetWidth;
+  bookingCanvas.height = sec.offsetHeight;
+}
+resizeBookingCanvas();
+window.addEventListener('resize', resizeBookingCanvas);
+
+// ── GOLDEN GLITTER SPARKLES ──────────────────────────────────────────────
+const GLITTER_COLORS = ['#FFD700','#C9A84C','#F5D78E','#FFF8DC','#E8C97A','#FFEC8B','#DAA520','#fffacd','#ffd966','#fff0a0'];
+
+// draw a 4-point glitter star (lens-shaped cross)
+function drawGlitterStar(ctx, size) {
+  ctx.beginPath();
+  ctx.moveTo(0, -size);
+  ctx.bezierCurveTo( size*0.18, -size*0.18,  size*0.18, -size*0.18,  size, 0);
+  ctx.bezierCurveTo( size*0.18,  size*0.18,  size*0.18,  size*0.18,  0,    size);
+  ctx.bezierCurveTo(-size*0.18,  size*0.18, -size*0.18,  size*0.18, -size, 0);
+  ctx.bezierCurveTo(-size*0.18, -size*0.18, -size*0.18, -size*0.18,  0,   -size);
+  ctx.closePath();
+}
+
+const bookingParticles = [];
+class BookingParticle {
+  constructor() { this.init(); }
+  init() {
+    this.x = Math.random() * bookingCanvas.width;
+    this.y = Math.random() * bookingCanvas.height;
+    this.size = Math.random() * 4.5 + 1.2;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 0.45 + 0.08;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotSpeed = (Math.random() - 0.5) * 0.035;
+    this.color = GLITTER_COLORS[Math.floor(Math.random() * GLITTER_COLORS.length)];
+    this.twinklePhase = Math.random() * Math.PI * 2;
+    this.twinkleSpeed = Math.random() * 0.055 + 0.012;
+    this.baseOpacity = Math.random() * 0.55 + 0.15;
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.rotation += this.rotSpeed;
+    this.twinklePhase += this.twinkleSpeed;
+    // wrap around
+    if (this.x < -8)  this.x = bookingCanvas.width  + 8;
+    if (this.x > bookingCanvas.width  + 8) this.x = -8;
+    if (this.y < -8)  this.y = bookingCanvas.height + 8;
+    if (this.y > bookingCanvas.height + 8) this.y = -8;
+  }
+  draw() {
+    const tw = 0.5 + 0.5 * Math.sin(this.twinklePhase);
+    const op = this.baseOpacity * tw;
+    const sz = this.size * (0.85 + tw * 0.35);
+
+    bookCtx.save();
+    bookCtx.translate(this.x, this.y);
+    bookCtx.rotate(this.rotation);
+
+    // soft outer glow
+    bookCtx.globalAlpha = op * 0.25;
+    bookCtx.fillStyle = this.color;
+    bookCtx.shadowBlur = 20;
+    bookCtx.shadowColor = this.color;
+    drawGlitterStar(bookCtx, sz * 2.2);
+    bookCtx.fill();
+
+    // main glitter body
+    bookCtx.globalAlpha = op;
+    bookCtx.shadowBlur = 10;
+    drawGlitterStar(bookCtx, sz);
+    bookCtx.fill();
+
+    // bright white center flash
+    bookCtx.globalAlpha = op * tw * 0.9;
+    bookCtx.fillStyle = '#ffffff';
+    bookCtx.shadowBlur = 5;
+    bookCtx.shadowColor = '#fff';
+    bookCtx.beginPath();
+    bookCtx.arc(0, 0, sz * 0.22, 0, Math.PI * 2);
+    bookCtx.fill();
+
+    bookCtx.restore();
+  }
+}
+for (let i = 0; i < 200; i++) bookingParticles.push(new BookingParticle());
+
+function animBooking() {
+  bookCtx.clearRect(0, 0, bookingCanvas.width, bookingCanvas.height);
+  bookingParticles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animBooking);
+}
+animBooking();
+
+// ── FOOTER PARTICLES ──────────────────────────────────────────────────────
+const footerCanvas = document.getElementById('footer-canvas');
+const fooCtx = footerCanvas.getContext('2d');
+
+function resizeFooterCanvas() {
+  const footer = document.querySelector('footer');
+  footerCanvas.width  = footer.offsetWidth;
+  footerCanvas.height = footer.offsetHeight;
+}
+resizeFooterCanvas();
+window.addEventListener('resize', resizeFooterCanvas);
+
+const footerParticles = [];
+class FooterParticle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * footerCanvas.width;
+    this.y = Math.random() * footerCanvas.height;
+    this.size = Math.random() * 2.5 + 0.5;
+    this.speedY = -(Math.random() * 0.5 + 0.1);
+    this.speedX = (Math.random() - 0.5) * 0.4;
+    this.opacity = Math.random() * 0.6 + 0.1;
+    this.color = Math.random() > 0.5 ? '#C9A84C' : '#F5D78E';
+  }
+  update() {
+    this.y += this.speedY;
+    this.x += this.speedX;
+    this.opacity -= 0.0015;
+    if (this.opacity <= 0 || this.y < 0) this.reset();
+  }
+  draw() {
+    fooCtx.save();
+    fooCtx.globalAlpha = this.opacity;
+    fooCtx.fillStyle = this.color;
+    fooCtx.shadowBlur = 4;
+    fooCtx.shadowColor = this.color;
+    fooCtx.beginPath();
+    fooCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    fooCtx.fill();
+    fooCtx.restore();
+  }
+}
+for (let i = 0; i < 60; i++) footerParticles.push(new FooterParticle());
+
+function animFooter() {
+  fooCtx.clearRect(0, 0, footerCanvas.width, footerCanvas.height);
+  footerParticles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animFooter);
+}
+animFooter();
+
+</script>
+</body>
+</html>
