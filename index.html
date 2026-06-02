@@ -2287,7 +2287,7 @@ class BookingParticle {
 }
 for (let i = 0; i < 200; i++) bookingParticles.push(new BookingParticle());
 
-function animBooking() {
+function animBooking() {if (!bookCtx) return;
   bookCtx.clearRect(0, 0, bookingCanvas.width, bookingCanvas.height);
   bookingParticles.forEach(p => { p.update(); p.draw(); });
   requestAnimationFrame(animBooking);
