@@ -1479,7 +1479,7 @@
       try{vid.pause();vid.src='';vid.load();}catch(e){}
     },1000);
   } 
- setTimeout(doExit,1650);
+ setTimeout(doExit,1500);
   intro.addEventListener('click',doExit,{once:true});
   intro.addEventListener('touchend',function(e){e.preventDefault();doExit();},{once:true,passive:false});
   document.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Escape')doExit();},{once:true});
