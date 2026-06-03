@@ -1409,11 +1409,6 @@
 (function(){
   'use strict';
   try{
-    if(localStorage.getItem('bk_intro_seen')==='1'){
-      ['bk-intro','bk-cur','bk-dot','bk-flash'].forEach(function(id){
-        var e=document.getElementById(id);if(e)e.style.display='none';
-      });
-      return;
     }
   }catch(e){}
   var intro=document.getElementById('bk-intro');
