@@ -1329,7 +1329,169 @@
 </style>
 </head>
 <body>
+<!-- ╔══════════════════════════════════════════════════════════════╗
+     ║  BARBERKING INTRO — הדבק ממש אחרי <body> הפותח             ║
+     ╚══════════════════════════════════════════════════════════════╝ -->
+<style>
+#bk-intro *,#bk-intro *::before,#bk-intro *::after{margin:0;padding:0;box-sizing:border-box}
+#bk-intro{position:fixed;inset:0;z-index:999999;background:#000;overflow:hidden;cursor:none;will-change:opacity;-webkit-font-smoothing:antialiased}
+#bk-intro.bk-hiding{opacity:0;transition:opacity .8s ease;pointer-events:none}
+#bk-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;filter:brightness(.48) contrast(1.18) saturate(.62) sepia(.15);transition:opacity 1.2s ease;will-change:opacity}
+#bk-vid.bk-on{opacity:1}
+#bk-fallback{position:absolute;inset:0;z-index:1;background-image:url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1400&q=80');background-size:cover;background-position:center;filter:brightness(.45) contrast(1.18) saturate(.6) sepia(.2);opacity:0;transition:opacity 1s ease;animation:bk-kz 20s ease-out forwards}
+#bk-fallback.bk-on{opacity:1}
+@keyframes bk-kz{0%{transform:scale(1.12)}100%{transform:scale(1.0)}}
+#bk-grain{position:absolute;inset:-100%;width:300%;height:300%;opacity:.038;pointer-events:none;z-index:3;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");animation:bk-gr .13s steps(1) infinite}
+@keyframes bk-gr{0%{transform:translate(0,0)}20%{transform:translate(-2%,3%)}40%{transform:translate(3%,-1%)}60%{transform:translate(-1%,2%)}80%{transform:translate(2%,-2%)}}
+#bk-vig{position:absolute;inset:0;z-index:4;pointer-events:none;background:radial-gradient(ellipse at center,transparent 20%,rgba(0,0,0,.88) 100%)}
+.bk-lb{position:absolute;left:0;right:0;background:#000;z-index:5;transition:height 1.5s cubic-bezier(.77,0,.18,1)}
+#bk-lbt{top:0;height:14%}
+#bk-lbb{bottom:0;height:14%}
+.bk-lb.bk-open{height:0!important}
+#bk-pole{position:absolute;top:14%;left:4%;z-index:10;opacity:0;transition:opacity 1s ease 1.4s}
+#bk-pole.bk-on{opacity:1}
+.bkp-ball{width:20px;height:20px;border-radius:50%;background:#c8900a;margin:0 auto 2px}
+.bkp-cap,.bkp-base{width:26px;height:10px;background:#bbb;border-radius:3px;margin-left:-3px}
+.bkp-body{width:20px;height:130px;border-radius:10px;overflow:hidden;background:#e0e0e0;position:relative}
+.bkp-stripe{position:absolute;inset:0;background:repeating-linear-gradient(-45deg,#c82020 0 6px,#f0f0f0 6px 11px,#1a2f70 11px 17px,#f0f0f0 17px 22px);background-size:22px 22px;animation:bkp-spin 1.4s linear infinite}
+@keyframes bkp-spin{to{background-position:0 44px}}
+.bkp-base{margin-top:2px}
+#bk-logo{position:absolute;inset:0;z-index:12;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center;padding:0 5vw}
+.bkl-sc{font-size:clamp(12px,2vw,26px);color:#d4a828;letter-spacing:14px;opacity:0;transform:translateY(12px);transition:opacity .8s ease .9s,transform .8s ease .9s;text-shadow:0 0 12px rgba(212,168,40,.5)}
+.bkl-sc.bk-on{opacity:1;transform:translateY(0)}
+.bkl-title{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:900;font-size:clamp(40px,8vw,100px);color:#fff;letter-spacing:4px;line-height:1;opacity:0;transform:translateY(18px);transition:opacity .8s ease 1.1s,transform .8s ease 1.1s;text-shadow:0 2px 40px rgba(0,0,0,1)}
+.bkl-title.bk-on{opacity:1;transform:translateY(0)}
+.bkl-sub{font-family:Georgia,'Times New Roman',serif;font-weight:300;font-size:clamp(9px,1.4vw,15px);color:rgba(212,168,40,.78);letter-spacing:5px;margin-top:12px;opacity:0;transition:opacity .8s ease 1.4s}
+.bkl-sub.bk-on{opacity:1}
+.bkl-line{width:0;height:1px;background:rgba(212,168,40,.4);margin:18px auto;transition:width .9s ease 1.9s}
+.bkl-line.bk-on{width:clamp(40px,6vw,80px)}
+.bkl-hint{font-family:Georgia,'Times New Roman',serif;font-size:clamp(9px,1.1vw,13px);color:rgba(255,255,255,.32);letter-spacing:5px;opacity:0;transition:opacity .8s ease 2.4s}
+.bkl-hint.bk-on{opacity:1;animation:bk-pulse 2s ease-in-out 2.7s infinite}
+@keyframes bk-pulse{0%,100%{opacity:.22}50%{opacity:.6}}
+#bk-cur{position:fixed;width:48px;height:48px;border:1px solid rgba(212,168,40,.6);border-radius:50%;pointer-events:none;z-index:9999999;transform:translate(-50%,-50%);transition:width .12s,height .12s,opacity .3s;display:none}
+#bk-dot{position:fixed;width:5px;height:5px;background:#d4a828;border-radius:50%;pointer-events:none;z-index:9999999;transform:translate(-50%,-50%);display:none}
+@media(hover:none){#bk-cur,#bk-dot{display:none!important}#bk-intro{cursor:pointer}}
+#bk-flash{position:fixed;inset:0;background:rgba(255,255,255,0);pointer-events:none;z-index:9999998;transition:background .18s ease}
+#bk-flash.bk-go{background:rgba(0,0,0,.6)}
+@media(max-width:480px){#bk-pole{left:2%;top:12%}.bkl-sc{letter-spacing:8px}.bkl-title{letter-spacing:2px}.bkl-sub{letter-spacing:3px}}
+</style>
 
+<div id="bk-cur" aria-hidden="true"></div>
+<div id="bk-dot" aria-hidden="true"></div>
+<div id="bk-flash" aria-hidden="true"></div>
+
+<div id="bk-intro" role="dialog" aria-label="BarberKing כניסה">
+  <div id="bk-fallback" aria-hidden="true"></div>
+  <video id="bk-vid" autoplay muted playsinline loop preload="metadata" crossorigin="anonymous" aria-hidden="true">
+    <source src="https://assets.mixkit.co/videos/preview/mixkit-man-hand-opening-a-door-close-up-view-49066-large.mp4" type="video/mp4">
+    <source src="https://videos.pexels.com/video-files/4376879/4376879-sd_640_360_30fps.mp4" type="video/mp4">
+  </video>
+  <div id="bk-grain" aria-hidden="true"></div>
+  <div id="bk-vig" aria-hidden="true"></div>
+  <div class="bk-lb" id="bk-lbt" aria-hidden="true"></div>
+  <div class="bk-lb" id="bk-lbb" aria-hidden="true"></div>
+  <div id="bk-pole" aria-hidden="true">
+    <div class="bkp-ball"></div>
+    <div class="bkp-cap"></div>
+    <div class="bkp-body"><div class="bkp-stripe"></div></div>
+    <div class="bkp-base"></div>
+  </div>
+  <div id="bk-logo">
+    <div class="bkl-sc" id="bkl-sc">✂ &nbsp;&nbsp; ✂</div>
+    <div class="bkl-title" id="bkl-title">BarberKing</div>
+    <div class="bkl-sub" id="bkl-sub">מספרה בוטיק עילית &nbsp;·&nbsp; תל אביב</div>
+    <div class="bkl-line" id="bkl-line"></div>
+    <div class="bkl-hint" id="bkl-hint">לחץ לכניסה</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  try{
+    if(localStorage.getItem('bk_intro_seen')==='1'){
+      ['bk-intro','bk-cur','bk-dot','bk-flash'].forEach(function(id){
+        var e=document.getElementById(id);if(e)e.style.display='none';
+      });
+      return;
+    }
+  }catch(e){}
+  var intro=document.getElementById('bk-intro');
+  var vid=document.getElementById('bk-vid');
+  var fallback=document.getElementById('bk-fallback');
+  var flash=document.getElementById('bk-flash');
+  var cur=document.getElementById('bk-cur');
+  var dot=document.getElementById('bk-dot');
+  if(!intro)return;
+  var hasMouse=false;
+  document.addEventListener('mousemove',function(e){
+    if(!hasMouse){hasMouse=true;if(cur)cur.style.display='block';if(dot)dot.style.display='block';}
+    if(cur){cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';}
+    if(dot){dot.style.left=e.clientX+'px';dot.style.top=e.clientY+'px';}
+  },{passive:true});
+  document.addEventListener('mousedown',function(){if(cur)cur.style.width='34px';if(cur)cur.style.height='34px';});
+  document.addEventListener('mouseup',function(){if(cur)cur.style.width='48px';if(cur)cur.style.height='48px';});
+  var started=false;
+  function startSequence(){
+    if(started)return;
+    started=true;
+    var lbt=document.getElementById('bk-lbt');
+    var lbb=document.getElementById('bk-lbb');
+    if(lbt)lbt.classList.add('bk-open');
+    if(lbb)lbb.classList.add('bk-open');
+    setTimeout(function(){
+      ['bkl-sc','bkl-title','bkl-sub','bkl-line','bkl-hint'].forEach(function(id){
+        var el=document.getElementById(id);if(el)el.classList.add('bk-on');
+      });
+      var p=document.getElementById('bk-pole');
+      if(p)p.classList.add('bk-on');
+    },350);
+  }
+  var videoLoaded=false;
+  var fallbackTimer=null;
+  function onVideoReady(){
+    if(videoLoaded)return;
+    videoLoaded=true;
+    clearTimeout(fallbackTimer);
+    vid.classList.add('bk-on');
+    startSequence();
+  }
+  function onVideoFailed(){
+    if(fallback)fallback.classList.add('bk-on');
+    startSequence();
+  }
+  vid.addEventListener('canplay',onVideoReady,{once:true});
+  vid.addEventListener('playing',onVideoReady,{once:true});
+  vid.addEventListener('error',onVideoFailed,{once:true});
+  fallbackTimer=setTimeout(function(){if(!videoLoaded){if(fallback)fallback.classList.add('bk-on');startSequence();}},2500);
+  try{vid.play().catch(function(){onVideoFailed();});}catch(e){}
+  var entered=false;
+  function doExit(){
+    if(entered)return;
+    entered=true;
+    try{localStorage.setItem('bk_intro_seen','1');}catch(e){}
+    if(cur)cur.style.opacity='0';
+    if(dot)dot.style.opacity='0';
+    if(flash){flash.style.transition='background .25s ease';flash.style.background='rgba(0,0,0,.6)';}
+    setTimeout(function(){
+      intro.classList.add('bk-hiding');
+      if(flash)flash.style.background='rgba(0,0,0,0)';
+    },180);
+    setTimeout(function(){
+      intro.style.display='none';
+      if(cur)cur.style.display='none';
+      if(dot)dot.style.display='none';
+      if(flash)flash.style.display='none';
+      document.body.style.cursor='';
+      try{vid.pause();vid.src='';vid.load();}catch(e){}
+    },1000);
+  }
+  intro.addEventListener('click',doExit,{once:true});
+  intro.addEventListener('touchend',function(e){e.preventDefault();doExit();},{once:true,passive:false});
+  document.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Escape')doExit();},{once:true});
+})();
+</script>
+<!-- ══ END BARBERKING INTRO ══ -->231
 
 
 <!-- Scroll progress -->
