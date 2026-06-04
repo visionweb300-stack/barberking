@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+  if(!localStorage.getItem('seen_intro')){
+    localStorage.setItem('seen_intro','1');
+    window.location.href='intro.html';
+  } else {
+    window.location.href='main.html';
+  }
+</script>
+</head>
+<body></body>
+</html>
